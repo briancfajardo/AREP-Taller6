@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Web Log</title>
+    </head>
+    <body>
+        <div class="search-input" id="search-input-get">
+            <form class="movieForm" id="log-form" action="/log">
+                <label for="msg">Message:</label><br>
+                <input class="name" type="text" id="msg" name="name" value=""><br><br>
+                <input class="toggle-button" type="button" id="toggle-button-get" value="Submit" onclick="loadGetMsg();">
+            </form>
+            <div class="respmsg" id="getrespmsg"></div>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>
