@@ -11,7 +11,17 @@
                 <input class="name" type="text" id="msg" name="name" value=""><br><br>
                 <input class="toggle-button" type="button" id="toggle-button-get" value="Submit" onclick="loadGetMsg();">
             </form>
-            <div class="respmsg" id="getrespmsg"></div>
+            <div class="respmsg" id="getrespmsg">
+                <table id="table-msg" style="border: 1px solid black;">
+                    <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Created</th>
+                    </tr>
+                    </thead>
+                    <tbody id="table"></tbody>
+                </table>
+            </div>
         </div>
         <script src="app.js"></script>
     </body>
