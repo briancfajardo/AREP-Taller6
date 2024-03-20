@@ -40,14 +40,15 @@ docker-compose up -d
 ```
 Podrás entrar a http://localhost:8080/ y deberías ver lo siguiente:
 
-<img width="300" alt="Pag inicial" src="media/pagInicial.png">
+![pagInicial](https://github.com/briancfajardo/AREP-Taller6/assets/80064378/c94489e7-6bd4-42d7-80ce-41d34c1ec3ec)
 
 ### Test de integración
 
 Para probar que el desarrollo de la aplicación fuera correcto sé probo cada funcionalidad en ella corriendo, para ello 
 enviamos un log y verificamos que saliera junto con los últimos creados.
 
-<img width="400" alt="Ejemplo de búsqueda" src="media/EjemplodeUso.png">
+![EjemplodeUso](https://github.com/briancfajardo/AREP-Taller6/assets/80064378/5f332551-de53-4b22-8072-2ce3786935bf)
+
 
 ## Documentacion
 
@@ -93,7 +94,8 @@ y que harán cada uno de ellos.
 
 La arquitectura de este taller es presentada con el siguiente diagrama:
 
-<img width="500" alt="Ejemplo de búsqueda" src="media/arquitectura.png">
+![arquitectura](https://github.com/briancfajardo/AREP-Taller6/assets/80064378/e58e18bb-79aa-4286-b4d2-69d17a13ddda)
+
 
 En donde se especifican los siguientes componentes:
 
@@ -116,8 +118,10 @@ comando y que obviamente se debe de ejecutar en la máquina virtual donde se des
 Para automatizar la creación de las imágenes y los contenedores se creó el archivo docker-compose.yml con l¡a siguiente 
 información:
 
-<img width="400" alt="docker-compose" src="media/docker-compose1.png">
-<img width="400" alt="docker-compose" src="media/docker-compose2.png">
+![docker-compose1](https://github.com/briancfajardo/AREP-Taller6/assets/80064378/bf9a300f-30ed-4549-b856-bfbc3370ff90)
+
+![docker-compose2](https://github.com/briancfajardo/AREP-Taller6/assets/80064378/972075a0-c22d-4885-a9b8-0ef03be06d7d)
+
 
 En este archivo especificamos como se crean las imágenes, en él hay 2 métodos de creación, especificando la imagen con un 
 Dockerfile y otro, trayendo la imagen de docker hub, aquí no se ahondara mucho, ya que se explicó en detalle en el taller anterior.
@@ -149,6 +153,7 @@ poder correr el lab, pero para ello puedes seguir los tutoriales del inicio del 
 
 ## Video
 
+https://github.com/briancfajardo/AREP-Taller6/assets/80064378/d87e4aa0-a7ce-4970-ab56-9f8b59a8ee55
 
 ## Agradecimientos
 
