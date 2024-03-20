@@ -1,7 +1,7 @@
 # Taller 6 AREP - Brian Camilo Fajardo Sanchez
 
-En este taller se realizan peticiones REST, específicamente GET, para una serie de operaciones, calcular el ceno de un
-número, el coseno, comprobar si una palabra es palindrome y calcular la magnitud de dos números
+En este taller creamos un servicio de logs que trae los 10 últimos mensajes recibidos de una base de datos de mongodb
+con una usando Docker y una instancia EC2 de AWS
 
 
 ## Iniciando
@@ -27,35 +27,27 @@ Si aún no cuenta con las tecnologías necesarias aquí hay unos videotutoriales
 
 Para correr el proyecto tienes que iniciar primero docker en tu máquina
 
-Luego de eso tienes que correr el siguiente comando que lo que hará es crear una imagen en tu docker local con el proyecto
-de mi taller 5
+Luego, clona el proyecto usando el siguiente comando
 
 ```
-docker run -p 8080:46000 -d --name Taller5CamiloFajardo briancfajardo/firstsprkwebapprepo
+git clone https://github.com/briancfajardo/AREP-Taller6.git
 ```
 
-El proyecto se ejecutará en el puerto 8080. Para poder abrirlo ingrese a su navegador de preferencia y abra la siguiente
-página.
+Luego muevete al directorio creado y desde ahi ejecuta este comando
 
 ```
-http://localhost:8080/
+docker-compose up -d
 ```
+Podrás entrar a http://localhost:8080/ y deberías ver lo siguiente:
 
-Debería verse de la siguiente manera:
-
-<img width="500" alt="Ejemplo de búsqueda" src="Img/PruebaInicialTaller5.png">
+<img width="300" alt="Pag inicial" src="media/pagInicial.png">
 
 ### Test de integración
 
-La prueba que se realizó para verificar el funcionamiento de las operaciones requeridas es la siguiente:
+Para probar que el desarrollo de la aplicación fuera correcto sé probo cada funcionalidad en ella corriendo, para ello 
+enviamos un log y verificamos que saliera junto con los últimos creados.
 
-Creación de la clase donde se crearon los servicios REST GET usando spark
-
-<img width="500" alt="Ejemplo de búsqueda" src="Img/GETSTaller5.png">
-
-Luego se probaron cada una de las funciones requeridas como se evidencia a continuación
-
-<img width="500" alt="Ejemplo de búsqueda" src="Img/PruebaIntegracionTaller5.png">
+<img width="400" alt="Ejemplo de búsqueda" src="media/EjemplodeUso.png">
 
 ## Documentacion
 
@@ -92,83 +84,71 @@ GNU General Public License family
 
 ## Diseño
 
-La aplicación contiene solo un paquete el cual contiene las operaciones requeridas y una clase fuera del paquete que
-contiene la creación de los servicios REST.
+Para simular la arquitectura especificada en el taller dentro de un mismo proyecto se separaron los componentes en paquetes
+diferentes, uno para los LogService, otro para la conexión y pruebas de la base de datos mongo y el último para el balanceador 
+RRInvoker. Además, se tienen los archivos Dockerfile y docker-compose que especifica como se construirán los contenedores 
+y que harán cada uno de ellos.
 
 ## Arquitectura
 
-En términos de componentes, en este proyecto podría verse como si tuviera 2, el contenedor y el computador físico, en 
-donde el contenedor corre la aplicación dentro del computador en un entorno independiente y se mapean puertos del PC físico 
-al del contenedor.
+La arquitectura de este taller es presentada con el siguiente diagrama:
 
-## Como crear imágenes y subirlas a DockerHub
+<img width="500" alt="Ejemplo de búsqueda" src="media/arquitectura.png">
 
-En este laboratorio aprenderemos a usar Docker para correr nuestra aplicación desde un contenedor además como publicarlo 
-en DockerHub para poder tener el contendor desde cualquier cliente con Docker instalado.
+En donde se especifican los siguientes componentes:
 
-Para lo cual, iniciamos definiendo la estructura y propiedades del contenedor que queremos crear.
+Security Group: Grupo de seguridad de la instancia en AWS que lo protege los puertos de la máquina (firewall de nivel 1) 
+- AWS-EC2: Instancia básica de una máquina virtual en la nube de Amazon 
+- Docker Engine: Motor de los contenedores instalado en la instancia 
+- APP-LB-RoundRobin: Balanceador de cargas que implementa un algoritmo estático de RoundRobin donde se rotan los servidores 
+por cada petición 
+- LogService: Servidor que almacenara en la base de datos el log, y devolverá los últimos 10 
+- MongoDB: Contenedor con la base de datos de mongo
 
-<img width="500" alt="Ejemplo de búsqueda" src="Img/dockerFile.png">
 
-En donde cada línea corremos los siguientes comandos:
+## Como crear las imágenes y desplegar el proyecto
 
-- FROM: Toma de base la imagen openjdk:17 en nuestro contenedor, esto para no tener que instalar Java desde 0 
-- WORKDIR: Asigna el path base del disco duro virtual de nuestro contenedor 
-- COPY: Copia los contenidos de la primera carpeta de nuestro computador al directorio de la imagen del contenedor 
-- CMD: Corre el comando especificado en la lista, cada entrada en la lista es una porción del comando separado por espacion
+El proceso que hay que seguir para crear las imágenes y desplegar el proyecto es esencialmente el mismo, solo cambia un 
+comando y que obviamente se debe de ejecutar en la máquina virtual donde se desea desplegar.
 
-Y luego con el siguiente comando creamos la imagen con las especificaciones del archivo Dockerfile.
+### Creacion de las imagenes
 
-docker build --tag dockersparkprimer  .
+Para automatizar la creación de las imágenes y los contenedores se creó el archivo docker-compose.yml con l¡a siguiente 
+información:
 
-Luego validamos que las imágenes se hayan creado usando este comando
+<img width="400" alt="docker-compose" src="media/docker-compose1.png">
+<img width="400" alt="docker-compose" src="media/docker-compose2.png">
 
-```
-docker images
-```
+En este archivo especificamos como se crean las imágenes, en él hay 2 métodos de creación, especificando la imagen con un 
+Dockerfile y otro, trayendo la imagen de docker hub, aquí no se ahondara mucho, ya que se explicó en detalle en el taller anterior.
 
-Para crear un contenedor con base en la imagen usamos el siguiente comando
+Lo nuevo que aparece en el archivo es la sección de "network" en esta estamos especificando la red virtual que crearemos 
+donde estarán los contenedores, en este especificamos el tipo de red (atributo driver), el id de la red y el gateway de esta. 
+La especificación de la red se hace para que los contenedores puedan tener una IP estática y sea fácilmente desplegable en cualquier PC.
 
-```
-docker run -d -p [PUERTO]:46000 --name [NOMBRE] dockersparkprimer
-```
-
-Donde reemplazamos con lo siguiente:
-
-- [PUERTO] : El puerto físico de la máquina donde queremos que corra 
-- [NOMBRE] : El nombre que le damos al contenedor
-
-Las partes del comando son las siguientes:
-
-- -d Continua con la ejecución del contenedor independientemente de la consola donde se corrió el comando 
-- -p Especificamos el puerto donde correrá el servidor, en el ejemplo estamos mapeando uno cualquiera de nuestra máquina con el puerto 46000 del contenedor 
-- --name Especificamos el nombre de nuestro contenedor
-
-Para revisar que todo salga bien ejecutamos el siguiente comando:
+Ya con el archivo lo único que debemos hacer es correr el siguiente comando:
 
 ```
-docker ps
+docker-compose up -d
 ```
 
-Por último, para subir la imagen a DockerHub seguiremos los siguientes pasos:
-
-1. crear la referencia local del repositorio
+En la máquina virtual de Amazon Linux es:
 
 ```
-docker tag [NombreLocal] [Nombre Repositorio]
+docker compose up
 ```
 
-2. Ingresar con las credenciales de la plataforma
+Y al entrar en la URL http://localhost:8080 encontrarás el app corriendo.
 
-```
-docker login
-```
+### Despliegue
 
-3. Hacer el push en docker
+Para crear una instancia EC2 en AWS puedes solo seguir el siguiente [tutorial](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html). 
+Ya cuando la hayas creado y te hayas conectado, simplemente clona el proyecto en la instancia y sigue el tutorial del 
+apartado anterior para desplegar. Puede que haga falta instalar git, docker y el plugin de compose en la instancia para 
+poder correr el lab, pero para ello puedes seguir los tutoriales del inicio del README.
 
-```
-docker push [Nombre Imagen]:tag
-```
+## Video
+
 
 ## Agradecimientos
 

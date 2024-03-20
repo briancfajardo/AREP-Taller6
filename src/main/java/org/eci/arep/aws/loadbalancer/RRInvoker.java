@@ -8,17 +8,23 @@ import java.net.URL;
 
 public class RRInvoker {
 
+    private static final String[] servers = new String[]{"10.5.0.5", "10.5.0.6", "10.5.0.7"};
     private static final String USER_AGENT = "Mozilla/5.0";
-    //private static final String GET_URL = "http://ec2-35-174-11-169.compute-1.amazonaws.com:";
-    private static final String GET_URL = "http://localhost:";
+    private static int currentServer = 0;
+    //private static final String GET_URL = "http://localhost:";
+    public static int getNextServer(){
+        int nextServer = currentServer % 3;
+        currentServer++;
+        return nextServer;
 
-    public static String invoke(String msg, String port) throws IOException {
+    }
 
-        URL obj = new URL(GET_URL+ port +"/logservice?"+ msg);
+    public static String invoke(String msg) throws IOException {
+        URL obj = new URL("http://"+servers[getNextServer()]+ ":46000/logservice?"+ msg);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
-
+        System.out.println(obj.getHost());
         int responseCode = con.getResponseCode();
         System.out.println("GET Response Code :: " + responseCode);
         StringBuffer response = new StringBuffer();
