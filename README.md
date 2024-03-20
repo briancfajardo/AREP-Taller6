@@ -153,7 +153,7 @@ poder correr el lab, pero para ello puedes seguir los tutoriales del inicio del 
 
 ## Video
 
-https://github.com/briancfajardo/AREP-Taller6/assets/80064378/d87e4aa0-a7ce-4970-ab56-9f8b59a8ee55
+https://github.com/briancfajardo/AREP-Taller6/assets/80064378/17de1a0a-99b9-4221-9874-f14981df3a10
 
 ## Agradecimientos
 
