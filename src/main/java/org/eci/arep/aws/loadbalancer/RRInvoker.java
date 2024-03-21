@@ -12,6 +12,11 @@ public class RRInvoker {
     private static final String USER_AGENT = "Mozilla/5.0";
     private static int currentServer = 0;
     //private static final String GET_URL = "http://localhost:";
+
+    /**
+     * Método que da el índice del siguiente servidor
+     * @return índice del servidor
+     */
     public static int getNextServer(){
         int nextServer = currentServer % 3;
         currentServer++;
@@ -19,6 +24,12 @@ public class RRInvoker {
 
     }
 
+    /**
+     * Método que realiza la conexión con el servidor que corresponde con el método RoundRobin
+     * @param msg mensaje que se desea enviar
+     * @return Respuesta del servidor
+     * @throws IOException Se lanza en dado caso de que haya un problema con la conexión
+     */
     public static String invoke(String msg) throws IOException {
         URL obj = new URL("http://"+servers[getNextServer()]+ ":46000/logservice?"+ msg);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
